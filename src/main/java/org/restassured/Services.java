@@ -35,6 +35,7 @@ public class Services {
         accessTokenSecret = properties.getProperty("access_token_secret");
     }
 
+
     public void getTimeLine() throws IOException {
         loadTokens();
         Response response = given()
