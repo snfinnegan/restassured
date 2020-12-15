@@ -8,7 +8,7 @@ public class RunServiceTest {
     @Test
     public void callService() throws IOException {
         Services services = new Services();
-        services.getTimeLine();
+        services.getTimeLineFilter("sfinneganauto");
         Assertions.assertTrue(true);
     }
 }
