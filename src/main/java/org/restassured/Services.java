@@ -13,9 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -35,6 +33,7 @@ public class Services {
     PrintStream printStream;
     Logger logger;
     List<String> tweets;
+    private ScenarioMap scenarioMap;
 
     public Services(){
         RestAssured.useRelaxedHTTPSValidation();
@@ -48,6 +47,7 @@ public class Services {
         this.resLoggingFilter = new ResponseLoggingFilter(printStream);
 
         logger = Logger.getLogger(Services.class.getName());
+        scenarioMap = new ScenarioMap();
     }
 
     public void loadTokens() throws IOException {
@@ -60,48 +60,44 @@ public class Services {
     }
 
 
-    public void getTimeLine(String screenName) throws IOException {
-        loadTokens();
-        Response response = given()
-                .auth()
-                .oauth(apiKey,apiKeySecret,accessToken,accessTokenSecret)
-                .contentType("application/json")
-                .log()
-                .all()
-        .when()
-                .get("/user_timeline.json?screen_name="+screenName)
-        .then()
-                .extract().response();
-
-        System.out.println(new JsonPath(response.asString()).get("text"));
-    }
-
-    public void getTimeLineFilter(String screenName) throws IOException{
+    public void get(String endpoint) throws IOException{
         loadTokens();
         request = given()
+                .queryParams((Map) scenarioMap.get("queryParams"))
                 .auth()
                 .oauth(apiKey,apiKeySecret,accessToken,accessTokenSecret)
                 .log()
                 .all();
-        response = request.filters(reqLoggingFilter,resLoggingFilter).when().get("/user_timeline.json?screen_name="+ screenName);
+        response = request.filters(reqLoggingFilter,resLoggingFilter).when().get(endpoint);
         tweets = new JsonPath(response.asString()).get("text");
     }
 
-    public void postStatus() throws IOException {
+    public void post(String endpoint) throws IOException {
         loadTokens();
         given()
                 .auth()
                 .oauth(apiKey,apiKeySecret,accessToken,accessTokenSecret)
-                .queryParam("status", new Timestamp(System.currentTimeMillis()))
+                .queryParams((Map) scenarioMap.get("queryParams"))
+                .log().all()
         .when()
-                .post("/update.json")
+                .post(endpoint)
         .then()
                 .statusCode(200);
 
-
     }
 
-    public void printLatestTweet() {
+    public String getLatestTweet() {
         logger.log(Level.INFO, tweets.get(0));
+        return tweets.get(0);
+    }
+
+    public ScenarioMap getScenarioMap() {
+        return scenarioMap;
+    }
+
+    public Response getResponse() { return response; }
+
+    public void setScenarioMap(ScenarioMap scenarioMap) {
+        this.scenarioMap = scenarioMap;
     }
 }
