@@ -13,13 +13,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import lombok.Data;
 
 import static io.restassured.RestAssured.given;
 
+@Data
 public class Services {
     String apiKey;
     String apiKeySecret;
@@ -33,7 +34,7 @@ public class Services {
     PrintStream printStream;
     Logger logger;
     List<String> tweets;
-    private ScenarioMap scenarioMap;
+    protected ScenarioMap scenarioMap;
 
     public Services(){
         RestAssured.useRelaxedHTTPSValidation();
@@ -89,15 +90,5 @@ public class Services {
     public String getLatestTweet() {
         logger.log(Level.INFO, tweets.get(0));
         return tweets.get(0);
-    }
-
-    public ScenarioMap getScenarioMap() {
-        return scenarioMap;
-    }
-
-    public Response getResponse() { return response; }
-
-    public void setScenarioMap(ScenarioMap scenarioMap) {
-        this.scenarioMap = scenarioMap;
     }
 }
