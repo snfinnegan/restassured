@@ -3,11 +3,8 @@ package stepdefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.internal.common.assertion.Assertion;
-import io.restassured.path.json.JsonPath;
-import org.apache.log4j.Level;
 import org.junit.Assert;
-import org.restassured.EndpointMethod;
+import org.restassured.enums.EndpointMethod;
 import org.restassured.Services;
 import org.restassured.enums.Endpoint;
 

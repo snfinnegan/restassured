@@ -1,4 +1,4 @@
-package org.restassured;
+package org.restassured.enums;
 
 public enum EndpointMethod {
     GET,
