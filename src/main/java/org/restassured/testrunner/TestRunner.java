@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         },
         features = "features",
+        tags = "@UI",
         glue = "stepdefinitions"
 )
 public class TestRunner {

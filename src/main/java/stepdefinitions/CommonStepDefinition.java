@@ -1,21 +1,47 @@
 package stepdefinitions;
 
+import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.openqa.selenium.WebDriver;
 import org.restassured.enums.EndpointMethod;
 import org.restassured.Services;
 import org.restassured.enums.Endpoint;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import pagObjects.GitHubHomePage;
+import selenium.BrowserFactory;
+import selenium.PageObjectManager;
+
 public class CommonStepDefinition {
     Services services;
+    WebDriver driver;
+    PageObjectManager pageObjectManager;
+
+    @Before
+    public void beforeScenario(Scenario scenario){
+        System.out.println("before scenario");
+        driver = BrowserFactory.getDriver();
+        pageObjectManager = new PageObjectManager(driver);
+    }
+
+    @After
+    public void tearDown(Scenario scenario) {
+        BrowserFactory.getDriver().close();
+        BrowserFactory.getDriver().quit();
+    }
 
     @Given("^I am using user (.*)")
     public CommonStepDefinition iAmUsingUser(String user) {
@@ -77,4 +103,23 @@ public class CommonStepDefinition {
         Assert.assertEquals(services.getScenarioMap().get("timestamp"),services.getLatestTweet());
         return this;
     }
+
+    @Given("^I open (.*) website$")
+    public void iOpenWebsite(String endpoint) throws InterruptedException {
+        System.out.println(endpoint);
+        driver = BrowserFactory.getDriver();
+        driver.get(endpoint);
+        //Thread.sleep(3000);
+    }
+
+    @Then("^I find the (.*) menu item$")
+    public void iFindElement(String element){
+        System.out.println("iFindElement");
+        //Assert.assertTrue(pageObjectManager.getGitHubHomePage().isWhyGitHubPresent());
+        pageObjectManager.getGitHubHomePage().isWhyGitHubPresent();
+    }
+
+//    @Then("I find the Why Github? ")
+//    public void iFindTheWhyGithubMenuItem() {
+//    }
 }

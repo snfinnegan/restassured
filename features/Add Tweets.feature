@@ -8,3 +8,4 @@ Feature: Create tweet
     And I send a tweet with a timestamp
     When I read the latest text
     Then the timestamp is from today
+    Then I open website
